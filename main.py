@@ -1,13 +1,41 @@
 # Nicholas J. Grosso 7/4/2021
 import numpy as np
+import pygame
+import math
+import sys
 
 # global variables
+
 in_session = True; # is the game still in progress?
 round = 0 # Empty slot is 0
 HUMAN = 1 # Human is a 1
 ALG = 2 # Algorithm is a 2
-COLMS = 7; # Set up colms used
-ROWS = 6; # Set up rows used
+COLMS = 7 # Set up colms used
+ROWS = 6 # Set up rows used
+BLUE = (0,0,255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
+pygame.init()
+myfont = pygame.font.SysFont("monospace", 75)
+SQUARESIZE = 100
+width = COLMS * SQUARESIZE
+height = ( ROWS + 1) * SQUARESIZE
+size = (width, height)
+screen = pygame.display.set_mode(size)
+radius = int(SQUARESIZE/2 - 5)
+
+def draw_board(board):
+	for i in range(COLMS):
+		for j in range(ROWS):
+			pygame.draw.rect(screen, BLUE, (i*SQUARESIZE, j*SQUARESIZE+SQUARESIZE , SQUARESIZE, SQUARESIZE))
+			if board[j][i] == 0:
+				pygame.draw.circle(screen, BLACK, (int(i*SQUARESIZE+SQUARESIZE/2), int(j*SQUARESIZE+SQUARESIZE/2)), radius)
+			elif board[j][i] == 1:
+				pygame.draw.circle(screen, RED, (int(i*SQUARESIZE+SQUARESIZE/2), int(j*SQUARESIZE+SQUARESIZE/2)), radius)
+			elif board[j][i] == 2:
+				pygame.draw.circle(screen, YELLOW, (int(i*SQUARESIZE+SQUARESIZE/2), int(j*SQUARESIZE+SQUARESIZE/2)), radius)
+		pygame.display.update()
 
 def ask():
 	a = int(input())
@@ -22,6 +50,8 @@ def create_board():
 	return board
 
 board = create_board()
+draw_board(board)
+pygame.display.update()
 
 def insert(board, action, row, player):
 	update = row + 1
@@ -43,44 +73,81 @@ def won(board, piece):
 				return True
 	#check diag going upward
 	for i in range(COLMS-3):
+		for j in range(ROWS-3, ROWS):
+			if board[j][i] == piece and board[j-1][i+1] == piece and board[j-2][i+2] == piece and board[j-3][i+3] == piece:
+				return True
+	#check diag going downward
+	for i in range(COLMS-3):
 		for j in range(ROWS-3):
 			if board[j][i] == piece and board[j+1][i+1] == piece and board[j+2][i+2] == piece and board[j+3][i+3] == piece:
 				return True
-	return False
 
 while in_session:
-	#its player 1s turn
-	if round == 0:
-		print("Human make your move: ")
-		a = ask()
-		if fupq(board, a):
-			for row in range(ROWS):
-				update = row + 1
-				n = ROWS - update
-				if board[n][a] == 0:
-					insert(board, a, row, HUMAN)
-					if won(board, 1):
-						print("PLAYER 1 WINS!!!")
-						in_session = False
-					break
-		else:
-			print("!!! ERROR NOT VALID MOVE !!!")
-			round += 1 # restarts a new round again for the same player
-	else:
-		b = ask()
-		if fupq(board, b):
-			for row in range(ROWS):
-				update = row + 1
-				n = ROWS - update
-				if board[n][b] == 0:	
-					insert(board, b, row, ALG)
-					break
-		else:
-			print("!!! ERROR NOT VALID MOVE !!!")
-			round += 1 # restarts a new round again for the same player
-	print(board)
-	round += 1
-	round = round % 2
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			sys.exit()
+		if event.type == pygame.MOUSEMOTION:
+			pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
+			posx = event.pos[0]
+			if round == 0:
+				 pygame.draw.circle(screen, RED, (posx, int(SQUARESIZE/2)), radius)
+			else:
+				pygame.draw.circle(screen, YELLOW, (posx, int(SQUARESIZE/2)), radius)
+		pygame.display.update()
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
+			#its player 1s turn
+			if round == 0:
+				posx = event.pos[0]
+				a = int(math.floor(posx/SQUARESIZE))
+				print("Human make your move: ")
+				#a = ask()
+				if fupq(board, a):
+					for row in range(ROWS):
+						update = row + 1
+						n = ROWS - update
+						if board[n][a] == 0:
+							insert(board, a, row, HUMAN)
+							if won(board, 1):
+								label = myfont.render("PLAYER 1 WINS!!!", 1, RED)
+								screen.blit(label, (40,10))
+								in_session = False
+							break
+					print(board)
+					pygame.display.update()
+					draw_board(board)
+					
+					round += 1
+					round = round % 2
+				else:
+					print("!!! ERROR NOT VALID MOVE !!!")
+					round += 1 # restarts a new round again for the same player
+			else:
+				posx = event.pos[0]
+				b = int(math.floor(posx/SQUARESIZE))
+				#b = ask()
+				if fupq(board, b):
+					for row in range(ROWS):
+						update = row + 1
+						n = ROWS - update
+						if board[n][b] == 0:	
+							insert(board, b, row, ALG)
+							if won(board, 2):
+								label = myfont.render("PLAYER 2 WINS!!!", 1, YELLOW)
+								screen.blit(label, (40,10))
+								in_session = False
+								draw_board(board)
+							break
+					print(board)
+					draw_board(board)
+					round += 1
+					round = round % 2
+				else:
+					print("!!! ERROR NOT VALID MOVE !!!")
+					round += 1 # restarts a new round again for the same player
+draw_board(board)
+pygame.display.update()
+pygame.time.wait(3000)
  # merge two arrays using binary sorted
 
  #def merge(
