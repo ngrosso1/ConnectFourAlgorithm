@@ -35,7 +35,7 @@ def draw_board(board):
 				pygame.draw.circle(screen, RED, (int(i*SQUARESIZE+SQUARESIZE/2), int(j*SQUARESIZE+SQUARESIZE/2)), radius)
 			elif board[j][i] == 2:
 				pygame.draw.circle(screen, YELLOW, (int(i*SQUARESIZE+SQUARESIZE/2), int(j*SQUARESIZE+SQUARESIZE/2)), radius)
-		pygame.display.update()
+	pygame.display.update()
 
 def ask():
 	a = int(input())
@@ -81,6 +81,7 @@ def won(board, piece):
 		for j in range(ROWS-3):
 			if board[j][i] == piece and board[j+1][i+1] == piece and board[j+2][i+2] == piece and board[j+3][i+3] == piece:
 				return True
+	draw_board(board)
 
 while in_session:
 	for event in pygame.event.get():
@@ -109,16 +110,18 @@ while in_session:
 						if board[n][a] == 0:
 							insert(board, a, row, HUMAN)
 							if won(board, 1):
+								draw_board(board)
 								label = myfont.render("PLAYER 1 WINS!!!", 1, RED)
 								screen.blit(label, (40,10))
+								pygame.display.flip()
+								pygame.event.pump()
+								pygame.time.delay(3000)
 								in_session = False
 							break
-					print(board)
-					pygame.display.update()
-					draw_board(board)
-					
 					round += 1
 					round = round % 2
+					print(board)
+					draw_board(board)
 				else:
 					print("!!! ERROR NOT VALID MOVE !!!")
 					round += 1 # restarts a new round again for the same player
@@ -133,10 +136,13 @@ while in_session:
 						if board[n][b] == 0:	
 							insert(board, b, row, ALG)
 							if won(board, 2):
+								draw_board(board)
 								label = myfont.render("PLAYER 2 WINS!!!", 1, YELLOW)
 								screen.blit(label, (40,10))
+								pygame.display.flip()
+								pygame.event.pump()
+								pygame.time.delay(3000)
 								in_session = False
-								draw_board(board)
 							break
 					print(board)
 					draw_board(board)
@@ -145,9 +151,4 @@ while in_session:
 				else:
 					print("!!! ERROR NOT VALID MOVE !!!")
 					round += 1 # restarts a new round again for the same player
-draw_board(board)
-pygame.display.update()
-pygame.time.wait(3000)
  # merge two arrays using binary sorted
-
- #def merge(
