@@ -2,7 +2,7 @@
 
 To run this program the following must be installed:
 
-Ubuntu:
+Ubuntu
 	sudo apt install python3\n
 	sudo apt install python3-pip
 	pip install numpy
