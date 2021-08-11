@@ -16,3 +16,11 @@ OSX:
 	brew install pip3
 	pip3 install numpy
 	pip3 install pygame
+
+Running for 2 in-person players:
+
+	python3 main.py
+
+Running for MinMax:
+
+	python3 main.py AI

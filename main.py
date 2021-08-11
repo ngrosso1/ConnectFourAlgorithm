@@ -4,20 +4,25 @@ import pygame
 import math
 import sys
 
-# global variables
+# Global variables
 
-in_session = True # is the game still in progress?
-first_round = True # Bool value to see if we are in the first round
-AI = False # Bool to see if the game was started up to play with AI instead
-round = 0 # Empty slot is 0
-HUMAN = 1 # Human is a 1
-ALG = 2 # Algorithm is a 2
-COLMS = 7 # Set up colms used
-ROWS = 6 # Set up rows used
+# Colors
 BLUE = (0,0,255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+
+# Test for in game and for what version, 2 people or AI
+in_session = True # is the game still in progress?
+first_round = True # Bool value to see if we are in the first round
+AI = False # Bool to see if the game was started up to play with AI instead
+round = 0 # Empty slot is 0
+
+HUMAN = 1 # Human is a 1
+ALG = 2 # Algorithm is a 2
+COLMS = 7 # Set up colms used
+ROWS = 6 # Set up rows used
+
 pygame.init()
 myfont = pygame.font.SysFont("monospace", 75)
 SQUARESIZE = 100
@@ -159,4 +164,3 @@ while in_session == True and AI == False:
 				else:
 					print("!!! ERROR NOT VALID MOVE !!!")
 					round += 1 # restarts a new round again for the same player
- # merge two arrays using binary sorted
