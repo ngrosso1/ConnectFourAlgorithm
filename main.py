@@ -6,7 +6,9 @@ import sys
 
 # global variables
 
-in_session = True; # is the game still in progress?
+in_session = True # is the game still in progress?
+first_round = True # Bool value to see if we are in the first round
+AI = False # Bool to see if the game was started up to play with AI instead
 round = 0 # Empty slot is 0
 HUMAN = 1 # Human is a 1
 ALG = 2 # Algorithm is a 2
@@ -83,7 +85,13 @@ def won(board, piece):
 				return True
 	draw_board(board)
 
-while in_session:
+while in_session == True and AI == False:
+	if first_round:
+		first_round = False
+		if len(sys.argv) > 1:
+			if sys.argv[1] == "AI":
+				AI = True
+				break
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()
