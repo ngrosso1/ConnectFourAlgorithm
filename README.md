@@ -1,5 +1,5 @@
 # connect4alg
-This program is the popular board game connect-4 with a GUI interface written in python3. You can choose between two in-person players or playing off against MinMax algorithm. You will need some dependencies as listed below. 
+This program is the popular board game connect-4 with a GUI interface written in python3. You can choose between two in-person players or playing off against MinMax algorithm. You will need some dependencies as listed below.
 
 Debian/Ubuntu:
 
