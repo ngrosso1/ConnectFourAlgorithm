@@ -3,26 +3,42 @@ import numpy as np
 import pygame
 import math
 import sys
+import tkinter
+import random
 
 # Global variables
-
+top = tkinter.Tk() # Prompt variable
+top.title("Select mode: ")
+top.geometry("250x100")
 # Colors
 BLUE = (0,0,255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
-
 # Test for in game and for what version, 2 people or AI
 in_session = True # is the game still in progress?
 first_round = True # Bool value to see if we are in the first round
 AI = False # Bool to see if the game was started up to play with AI instead
 round = 0 # Empty slot is 0
-
+# Values for board construction
 HUMAN = 1 # Human is a 1
 ALG = 2 # Algorithm is a 2
 COLMS = 7 # Set up colms used
 ROWS = 6 # Set up rows used
 
+#Functions for prompt
+def byeBF():
+	global AI 
+	AI = False
+	top.destroy()
+def byeBT():
+	global AI 
+	AI = True
+	top.destroy()
+
+B1 = tkinter.Button(top, text ="Player vs Player", command = byeBF).pack()
+B2 = tkinter.Button(top, text = "Player vs MinMax", command = byeBT).pack()
+top.mainloop()
 pygame.init()
 myfont = pygame.font.SysFont("monospace", 75)
 SQUARESIZE = 100
@@ -31,6 +47,7 @@ height = ( ROWS + 1) * SQUARESIZE
 size = (width, height)
 screen = pygame.display.set_mode(size)
 radius = int(SQUARESIZE/2 - 5)
+print(AI)
 
 def draw_board(board):
 	for i in range(COLMS):
@@ -90,13 +107,7 @@ def won(board, piece):
 				return True
 	draw_board(board)
 
-while in_session == True and AI == False:
-	if first_round:
-		first_round = False
-		if len(sys.argv) > 1:
-			if sys.argv[1] == "AI":
-				AI = True
-				break
+while in_session == True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()
@@ -110,18 +121,16 @@ while in_session == True and AI == False:
 		pygame.display.update()
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
-			#its player 1s turn
-			if round == 0:
+			if round == 0: # Its player 1 (or humans) turn
 				posx = event.pos[0]
-				a = int(math.floor(posx/SQUARESIZE))
+				colmSelected = int(math.floor(posx/SQUARESIZE))
 				print("Human make your move: ")
-				#a = ask()
-				if fupq(board, a):
+				if fupq(board, colmSelected):
 					for row in range(ROWS):
 						update = row + 1
 						n = ROWS - update
-						if board[n][a] == 0:
-							insert(board, a, row, HUMAN)
+						if board[n][colmSelected] == 0:
+							insert(board, colmSelected, row, HUMAN)
 							if won(board, 1):
 								draw_board(board)
 								label = myfont.render("PLAYER 1 WINS!!!", 1, RED)
@@ -137,17 +146,16 @@ while in_session == True and AI == False:
 					draw_board(board)
 				else:
 					print("!!! ERROR NOT VALID MOVE !!!")
-					round += 1 # restarts a new round again for the same player
-			else:
+					round += 1 # Restarts a new round again for the same player
+			elif AI == False and round == 1:
 				posx = event.pos[0]
-				b = int(math.floor(posx/SQUARESIZE))
-				#b = ask()
-				if fupq(board, b):
+				colmSelected = int(math.floor(posx/SQUARESIZE))
+				if fupq(board, colmSelected):
 					for row in range(ROWS):
 						update = row + 1
 						n = ROWS - update
-						if board[n][b] == 0:	
-							insert(board, b, row, ALG)
+						if board[n][colmSelected] == 0:	
+							insert(board, colmSelected, row, ALG)
 							if won(board, 2):
 								draw_board(board)
 								label = myfont.render("PLAYER 2 WINS!!!", 1, YELLOW)
@@ -157,10 +165,35 @@ while in_session == True and AI == False:
 								pygame.time.delay(3000)
 								in_session = False
 							break
-					print(board)
-					draw_board(board)
+					
 					round += 1
 					round = round % 2
+					print(board)
+					draw_board(board)
 				else:
 					print("!!! ERROR NOT VALID MOVE !!!")
 					round += 1 # restarts a new round again for the same player
+	if AI == True and round == 1: # If MinMax is selected
+		colmSelected = random.randint(0, COLMS-1)
+		if fupq(board, colmSelected):
+			for row in range(ROWS):
+				update = row + 1
+				n = ROWS - update
+				if board[n][colmSelected] == 0:	
+					insert(board, colmSelected, row, ALG)
+					if won(board, 2):
+						draw_board(board)
+						label = myfont.render("PLAYER 2 WINS!!!", 1, YELLOW)
+						screen.blit(label, (40,10))
+						pygame.display.flip()
+						pygame.event.pump()
+						pygame.time.delay(3000)
+						in_session = False
+					break
+			print(board)
+			draw_board(board)
+			round += 1
+			round = round % 2
+		else:
+			print("!!! ERROR NOT VALID MOVE !!!")
+			round += 1 # restarts a new round again for the same player
