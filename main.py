@@ -8,8 +8,8 @@ import random
 
 # Global variables
 top = tkinter.Tk() # Prompt variable
-top.title("Select mode: ")
-top.geometry("250x100")
+top.title("Select mode: ") # Title for prompt window
+top.geometry("250x100") # Prompt window size
 # Colors
 BLUE = (0,0,255)
 BLACK = (0, 0, 0)
@@ -36,9 +36,11 @@ def byeBT():
 	AI = True
 	top.destroy()
 
+# First button for prompt window for PVP
 B1 = tkinter.Button(top, text ="Player vs Player", command = byeBF).pack()
+# Second button for prompt window for alg
 B2 = tkinter.Button(top, text = "Player vs MinMax", command = byeBT).pack()
-top.mainloop()
+top.mainloop() # Keeps prompt live until button destroys it
 pygame.init()
 myfont = pygame.font.SysFont("monospace", 75)
 SQUARESIZE = 100
@@ -47,7 +49,6 @@ height = ( ROWS + 1) * SQUARESIZE
 size = (width, height)
 screen = pygame.display.set_mode(size)
 radius = int(SQUARESIZE/2 - 5)
-print(AI)
 
 def draw_board(board):
 	for i in range(COLMS):
@@ -61,13 +62,13 @@ def draw_board(board):
 				pygame.draw.circle(screen, YELLOW, (int(i*SQUARESIZE+SQUARESIZE/2), int(j*SQUARESIZE+SQUARESIZE/2)), radius)
 	pygame.display.update()
 
-def ask():
-	a = int(input())
-	if a <= 0 or a > COLMS:
-		print("CANNOT BE LESS MIN COLMS OR GREATER THAN MAX COLMS")
-		return ask()
-	a -= 1 # correcting colm location (Ex. If input is 1 it chooses 1st colm instead of needing to input 0 for first colm)
-	return a
+# def ask():
+# 	a = int(input())
+# 	if a <= 0 or a > COLMS:
+# 		print("CANNOT BE LESS MIN COLMS OR GREATER THAN MAX COLMS")
+# 		return ask()
+# 	a -= 1 # correcting colm location (Ex. If input is 1 it chooses 1st colm instead of needing to input 0 for first colm)
+# 	return a
 
 def create_board():
 	board = np.zeros((ROWS, COLMS))
@@ -85,22 +86,22 @@ def fupq(board, action): # fupq - filled up ?
 	return board[0][action] == 0
 
 def won(board, piece):
-	#verticle check
+	# Verticle check
 	for i in range(COLMS):
 		for j in range(ROWS-3):
 			if board[j][i] == piece and board[j+1][i] == piece and board[j+2][i] == piece and board[j+3][i] == piece:
 				return True
-	#check all same 4 pieces horizantal
+	# Check all same 4 pieces horizantal
 	for i in range(COLMS-3):
 		for j in range(ROWS):
 			if board[j][i] == piece and board[j][i+1] == piece and board[j][i+2] == piece and board[j][i+3] == piece:
 				return True
-	#check diag going upward
+	# Check diag going upward
 	for i in range(COLMS-3):
 		for j in range(ROWS-3, ROWS):
 			if board[j][i] == piece and board[j-1][i+1] == piece and board[j-2][i+2] == piece and board[j-3][i+3] == piece:
 				return True
-	#check diag going downward
+	# Check diag going downward
 	for i in range(COLMS-3):
 		for j in range(ROWS-3):
 			if board[j][i] == piece and board[j+1][i+1] == piece and board[j+2][i+2] == piece and board[j+3][i+3] == piece:
@@ -172,7 +173,7 @@ while in_session == True:
 					draw_board(board)
 				else:
 					print("!!! ERROR NOT VALID MOVE !!!")
-					round += 1 # restarts a new round again for the same player
+					round += 1 # Restarts a new round again for the same player
 	if AI == True and round == 1: # If MinMax is selected
 		colmSelected = random.randint(0, COLMS-1)
 		if fupq(board, colmSelected):
@@ -196,4 +197,4 @@ while in_session == True:
 			round = round % 2
 		else:
 			print("!!! ERROR NOT VALID MOVE !!!")
-			round += 1 # restarts a new round again for the same player
+			round += 1 # Restarts a new round again for the same player

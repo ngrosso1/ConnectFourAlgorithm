@@ -1,4 +1,6 @@
-# connect4alg
+# Connect4Algorithm
+Nicholas J. Grosso
+
 This program is the popular board game connect-4 with a GUI interface written in python3. You can choose between two in-person players or playing off against MinMax algorithm. You will need some dependencies as listed below.
 
 Debian/Ubuntu:
@@ -8,6 +10,7 @@ Debian/Ubuntu:
 	sudo apt install python3-pip
 	pip install numpy
 	pip install pygame
+	pip install tkinter
 
 OSX:
 
@@ -16,11 +19,8 @@ OSX:
 	brew install pip3
 	pip3 install numpy
 	pip3 install pygame
+	pip3 install tkinter
 
-Running for 2 in-person players:
+Running command:
 
 	python3 main.py
-
-Running for MinMax:
-
-	python3 main.py AI
