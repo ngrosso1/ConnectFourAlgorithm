@@ -39,7 +39,7 @@ def byeBT():
 # First button for prompt window for PVP
 B1 = tkinter.Button(top, text ="Player vs Player", command = byeBF).pack()
 # Second button for prompt window for alg
-B2 = tkinter.Button(top, text = "Player vs MinMax", command = byeBT).pack()
+#B2 = tkinter.Button(top, text = "Player vs MinMax", command = byeBT).pack()
 top.mainloop() # Keeps prompt live until button destroys it
 pygame.init()
 myfont = pygame.font.SysFont("monospace", 75)
